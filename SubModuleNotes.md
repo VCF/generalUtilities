@@ -1,12 +1,23 @@
 ## Using a submodule
 
-It seems normal to be confused by git submodules.
+It seems normal to be confused by git submodules...
 
 ### Updating already-establish submodule
 
-Via [Vogella][Vogella]:
+Via [@Henrik Gustafsson on StackOverflow][PullSub]:
 
 ```bash
+## From the 'parent' repo:
+git submodule update --recursive --remote
+```
+
+Suggestion from [Vogella][Vogella] did not appear to work; The
+operation claimed submodule was "Already up-to-date", even though a
+`git status` within the submodule indicated it was three commits
+behind:
+
+```bash
+## Did not perform as expected:
 git pull --recurse-submodules
 ```
 
@@ -40,3 +51,4 @@ There are options to have a submodule track specific branches or commits
 
 [FirstTime]: https://stackoverflow.com/a/9189815
 [Vogella]: http://www.vogella.com/tutorials/GitSubmodules/article.html
+[PullSub]: https://stackoverflow.com/a/1032653
