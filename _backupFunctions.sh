@@ -74,7 +74,7 @@ function backupSubfolder {
 function allBackups {
     ## Find all backups currently held
     sf=`backupSubfolder "$1" "$2"`
-    ab=`ls -1t "$sf"/????-??-??.tar.gz`
+    ab=`ls -1t "$sf"/????-??-??.tar.gz 2> /dev/null`
     ## Text block to array: https://stackoverflow.com/a/5257398
     IFS=$'\n'
     AllBackups=($ab)
@@ -108,7 +108,7 @@ function archiveFolder {
     SrcName=`basename "$SRC"`
     tgzPath="$sf/$tgz"
     cd "$SrcPar"
-    msg "$FgCyan" "Backing up $srcName to $tgzPath"
+    msg "$FgCyan" "Backing up $SrcName to $tgzPath"
     tar -czvf "$tgzPath" "$SrcName"
     cd "$Pwd" # Restore prior working directory
 }
