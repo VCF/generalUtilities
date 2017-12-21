@@ -114,3 +114,10 @@ function relativePath {
     [[ "$rv" == "" ]] && rv='.'
     echo "$rv"
 }
+
+function hasParam {
+    ## Uppercasing variables: https://stackoverflow.com/a/19411918
+    PARAM=${1^^} # The parameter settings that were provided
+    VAL=${2^^}   # The value to check against
+    [[ "$PARAM" == *"$VAL"* ]] && echo "$VAL"
+}
