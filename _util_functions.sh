@@ -32,9 +32,37 @@ LICENSE_GPL3="
 # Sourcing script with '.' :
 #   http://www.unix.com/302168850-post2.html?s=34e24e03a7ea3080fed2982f1a0f038d
 
+## Seem to be constantly pulling up ANSI color page:
+##    https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+FgBlack="30"
+FgRed="31"
+FgGreen="32"
+FgYellow="33"
+FgBlue="34"
+FgMagenta="35"
+FgCyan="36"
+FgWhite="37"
+BgBlack="40"
+BgRed="41"
+BgGreen="42"
+BgYellow="43"
+BgBlue="44"
+BgMagenta="45"
+BgCyan="46"
+BgWhite="47"
+## COLOR NOTE:
+##   gnome-terminal appears to use X colors
+##   kterm appears to use VGA
+
+if [[ "$TERM" == "xterm" ]]; then
+    ## This seems to discriminate between konsole ('xterm') and
+    ## gnome-terminal ('xterm-256color').
+    BgYellow="103" # Fix ugly yellow background
+fi
+
+
 function msg {
-    ## Colorized terminal message. List if ANSI color codes:
-    ##   https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+    ## Colorized terminal message.
     COL=$1 # The ANSI color code(s)
     MSG=$2 # The text to print
     [[ -z "$COL" ]] && col="32"
@@ -44,13 +72,13 @@ function msg {
 function err {
     ## Red on yellow, execution continues
     ##  $1 - The text to print
-    msg "43;31" "$1"
+    msg "$BgYellow;$FgRed" "$1"
 }
 
 function die {
     ## Yellow on red, halts
     ##  $1 - The text to print
-    msg "41;33" "$1"
+    msg "$BgRed;$FgYellow" "$1"
     exit
 }
 
