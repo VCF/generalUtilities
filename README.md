@@ -1,7 +1,8 @@
 ## General Utility Functions
 
 Setting up this repository to be used as a submodule in other
-repositories.
+repositories. See [SubModule Notes](SubModuleNotes.md) for
+instructions on using submodules.
 
 * [_util_functions.sh](_util_functions.sh) - Basic functions, mostly
   colorized terminal messaging.
