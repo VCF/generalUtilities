@@ -108,7 +108,11 @@ function archiveFolder {
     SrcName=`basename "$SRC"`
     tgzPath="$sf/$tgz"
     cd "$SrcPar"
-    msg "$FgCyan" "Backing up $SrcName to $tgzPath"
+    msg "$FgCyan" "Backing up $SrcName"
     tar -czvf "$tgzPath" "$SrcName"
+    ## Size of file: https://unix.stackexchange.com/a/16644
+    sz=`stat --printf="%s" "$tgzPath"`
+    sz=`expr "$sz" / 1024`
+    msg "$FgBlue" "  Backup complete - ${sz}kb\n    $tgzPath"
     cd "$Pwd" # Restore prior working directory
 }
