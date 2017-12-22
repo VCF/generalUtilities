@@ -40,7 +40,7 @@ function lastModified {
     ## One argument, the file or folder to check. Will return the most
     ## recent modified time, in epoch seconds
     Item=`readlink -f $1`
-    if [[ -d "$Folder" ]]; then
+    if [[ -d "$Item" ]]; then
         ## Newest mod time in a folder @Paulo Scardine :
         ##   https://stackoverflow.com/a/4997339
         ## Using %Y for 'last data modification, seconds since Epoch'
