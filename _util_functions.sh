@@ -84,6 +84,7 @@ function die {
 
 function set_title {
     ## Change title of terminal window header
+    ##   https://unix.stackexchange.com/a/11230
     ##  $1 - The title to show
     echo -ne "\033]0;$1\007";
 }
