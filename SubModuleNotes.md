@@ -40,9 +40,23 @@ Via [@VonC on StackOverflow][FirstTime] (git >= 1.8.2):
 ```bash
 cd /my/parent/repo
 ## Add (this) submodule *AND* track Master:
-git submodule add -b master git@github.com:VCF/installers.git
+git submodule add -b master https://github.com/VCF/generalUtilities.git
 # update
 git submodule update --remote 
+```
+
+_Note_: You likely want to add the submodule using __HTTPS, not
+SSH__. If you use SSH, all attempts to clone the repository will
+demand valid SSH credentials
+
+### Removing a submodule
+
+Via [@VonC on StackOverflow](https://stackoverflow.com/a/16162000)
+
+```bash
+git submodule deinit -f -- a/submodule
+rm -rf .git/modules/a/submodule
+git rm -f a/submodule
 ```
 
 ### Advanced
