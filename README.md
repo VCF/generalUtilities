@@ -9,4 +9,6 @@ instructions on using submodules.
 * [gitMoveByPatch.sh](gitMoveByPatch.sh) - git functions to excise
   part of a repo along with its history, and a reminder message of how
   to apply it to a new repo
-
+* [R_profile_utils.R](R_profile_utils.R) - utility functions I use for
+  R development, added to `.Rprofile` via `source()`
+  
