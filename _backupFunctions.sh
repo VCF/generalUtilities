@@ -116,3 +116,31 @@ function archiveFolder {
     msg "$FgBlue" "  Backup complete - ${sz}kb\n    $tgzPath"
     cd "$Pwd" # Restore prior working directory
 }
+
+function rsyncFolder {
+    ## $1 - The folder or file to archive
+    ## $2 - Optional subfolder to put the archive under
+
+    ## rsync reminders
+    ##   -r, --recursive : recurse into directories
+    ##   -l, --links : copy symlinks as symlinks
+    ##   -p, --perms : preserve permissions
+    ##   -t, --times : preserve modification times
+    ##   -g, --group : preserve group
+    ##   -o, --owner : preserve owner (super-user only)
+    ##   --devices : preserve device files (super-user only)
+    ##   --specials : preserve special files
+    ##   -D : same as --devices --specials
+    ##   -a : same as -rlptgoD (all the above)
+    ##   -C, --cvs-exclude : auto-ignore files in the same way CVS does
+    ##   -z, --compress : compress file data during the transfer
+
+    
+    SRC=`readlink -f $1`             # Source folder, de-linked
+    [[ -e "$SRC" ]] || return        #   Do nothing if it does not exist
+    sf=`backupSubfolder "$1" "$2"`   # Backup folder (Target directory)
+    SrcName=`basename "$SRC"`
+
+    msg "$FgCyan" "Synchronizing $SrcName"
+    rsync -av "$SRC" "$sf"
+}
