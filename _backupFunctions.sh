@@ -7,7 +7,7 @@
 
 BACKUPDIR="/abyss/Common/Backups"
 ## Subdirectory by host:
-myHost=`hostname`
+myHost=$(hostname)
 [[ -z "$myHost" ]] || BACKUPDIR="$BACKUPDIR/$myHost"
 ## Make sure target directory exists
 [[ -d "$BACKUPDIR" ]] || mkdir -p -m 1777 "$BACKUPDIR"
@@ -39,23 +39,23 @@ my_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 function lastModified {
     ## One argument, the file or folder to check. Will return the most
     ## recent modified time, in epoch seconds
-    Item=`readlink -f $1`
+    Item=$(readlink -f "$1")
     if [[ -d "$Item" ]]; then
         ## Newest mod time in a folder @Paulo Scardine :
         ##   https://stackoverflow.com/a/4997339
         ## Using %Y for 'last data modification, seconds since Epoch'
-        rv=`find "$Item" -exec stat \{} --printf="%Y\n" \; | sort -n -r | head -n 1`
+        rv=$(find "$Item" -exec stat \{} --printf="%Y\n" \; | sort -n -r | head -n 1)
     else
         ## Single file
-        rv=`stat "$Item" --printf="%Y\n"`
+        rv=$(stat "$Item" --printf="%Y\n")
     fi
     echo "$rv"
 }
 
 function backupSubfolder {
-    SRC=`readlink -f $1` # Source folder, de-linked
+    SRC=$(readlink -f "$1") # Source folder, de-linked
     SubDir="$2" # Optional intermediate subdirectory
-    DirName=`basename "$SRC"`
+    DirName=$(basename "$SRC")
     rv="$BACKUPDIR"
     if [[ ! -z "$SubDir" ]]; then
         if [[ "$SubDir" =~ ^/ ]]; then
@@ -73,8 +73,8 @@ function backupSubfolder {
 
 function allBackups {
     ## Find all backups currently held
-    sf=`backupSubfolder "$1" "$2"`
-    ab=`ls -1t "$sf"/????-??-??.tar.gz 2> /dev/null`
+    sf=$(backupSubfolder "$1" "$2")
+    ab=$(ls -1t "$sf"/????-??-??.tar.gz 2> /dev/null)
     ## Text block to array: https://stackoverflow.com/a/5257398
     IFS=$'\n'
     AllBackups=($ab)
@@ -90,33 +90,33 @@ function mostRecentBackup {
 function archiveFolder {
     ## $1 - The folder or file to archive
     ## $2 - Optional subfolder to put the archive under
-    SRC=`readlink -f $1`             # Source folder, de-linked
+    SRC=$(readlink -f "$1")             # Source folder, de-linked
     if [[ ! -e "$SRC" ]]; then
         ## Do nothing if it does not exist
         msg "$FgYellow" "  Source not found: $SRC"
         return
     fi
-    sf=`backupSubfolder "$1" "$2"`   # Backup folder (Target directory)
+    sf=$(backupSubfolder "$1" "$2")   # Backup folder (Target directory)
     mkdir -p -m 0777 "$sf"
-    mrb=`mostRecentBackup "$1" "$2"` # What is the most recent backup?
+    mrb=$(mostRecentBackup "$1" "$2") # What is the most recent backup?
     if [[ ! -z "$mrb" ]]; then
         ## There is at least one backup. Is it more recent than the folder?
-        bDt=`lastModified "$mrb"`
-        fDt=`lastModified "$SRC"`
+        bDt=$(lastModified "$mrb")
+        fDt=$(lastModified "$SRC")
         [[ "$bDt" > "$fDt" ]] && return # Do nothing if archive is fresh
     fi
-    tgz=`date +"%Y-%m-%d.tar.gz"`
+    tgz=$(date +"%Y-%m-%d.tar.gz")
     ## Set up to avoid full directory path in tar file:
-    Pwd=`pwd`
-    SrcPar=`dirname "$SRC"`
-    SrcName=`basename "$SRC"`
+    Pwd=$(pwd)
+    SrcPar=$(dirname "$SRC")
+    SrcName=$(basename "$SRC")
     tgzPath="$sf/$tgz"
     cd "$SrcPar"
     msg "$FgCyan" "Backing up $SrcName"
     tar -czvf "$tgzPath" "$SrcName"
     ## Size of file: https://unix.stackexchange.com/a/16644
-    sz=`stat --printf="%s" "$tgzPath"`
-    sz=`expr "$sz" / 1024`
+    sz=$(stat --printf="%s" "$tgzPath")
+    sz=$(expr "$sz" / 1024)
     msg "$FgBlue" "  Backup complete - ${sz}kb\n    $tgzPath"
     cd "$Pwd" # Restore prior working directory
 }
@@ -140,9 +140,9 @@ function rsyncFolder {
     ##   -z, --compress : compress file data during the transfer
 
     
-    SRC=`readlink -f $1`             # Source folder, de-linked
-    [[ -e "$SRC" ]] || return        #   Do nothing if it does not exist
-    sf=`backupSubfolder "$1" "$2"`   # Backup folder (Target directory)
+    SRC=$(readlink -f "$1")           # Source folder, de-linked
+    [[ -e "$SRC" ]] || return         #   Do nothing if it does not exist
+    sf=$(backupSubfolder "$1" "$2")   # Backup folder (Target directory)
     SrcName=`basename "$SRC"`
 
     msg "$FgCyan" "Synchronizing $SrcName"
