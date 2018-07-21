@@ -91,7 +91,11 @@ function archiveFolder {
     ## $1 - The folder or file to archive
     ## $2 - Optional subfolder to put the archive under
     SRC=`readlink -f $1`             # Source folder, de-linked
-    [[ -e "$SRC" ]] || return        #   Do nothing if it does not exist
+    if [[ ! -e "$SRC" ]]; then
+        ## Do nothing if it does not exist
+        msg "$FgYellow" "  Source not found: $SRC"
+        return
+    fi
     sf=`backupSubfolder "$1" "$2"`   # Backup folder (Target directory)
     mkdir -p -m 0777 "$sf"
     mrb=`mostRecentBackup "$1" "$2"` # What is the most recent backup?
