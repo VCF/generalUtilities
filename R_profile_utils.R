@@ -58,13 +58,13 @@ bacAM <- function() {
         if (is.element(ns, ln)) {
             tryCatch({
                 unloadNamespace(ns)
-            }, error = function() {
+            }, error = function(e) {
                 ## Try putting the namespace later in the
                 ## list. Perhaps there is a following namespace that
                 ## is depending on it? If so, attempting removal later
                 ## should work.
                 nsList <- c(nsList, ns)
-            }, finally = function() {
+            }, finally = {
                 ## Note that we unloaded the namespace
                 ul <- c(ul, ns)
             })
