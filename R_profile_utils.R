@@ -31,7 +31,8 @@ bacAM <- function() {
     ## unload the inherited packages. So manually unload them before
     ## running buildAndCheck()
     ln <- loadedNamespaces()
-    for (ns in c("AnnotatedMatrix", "ParamSetI", "EventLogger")) {
+    for (ns in c("SetFisherAnalysis", "SetFisher", "AnnotatedMatrix",
+                 "ParamSetI", "EventLogger")) {
         if (is.element(ns, ln)) unloadNamespace(ns)
     }
     myRepository::buildAndCheck()
