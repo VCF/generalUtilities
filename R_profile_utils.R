@@ -31,10 +31,15 @@ bacAM <- function() {
     ## unload the inherited packages. So manually unload them before
     ## running buildAndCheck()
     ln <- loadedNamespaces()
+    ul <- character()
     for (ns in c("SetFisherAnalysis", "SetFisher", "AnnotatedMatrix",
                  "ParamSetI", "EventLogger")) {
-        if (is.element(ns, ln)) unloadNamespace(ns)
+        if (is.element(ns, ln)) {
+            unloadNamespace(ns)
+            ul <- c(ul, ns)
+        }
     }
+    if (length(ul) != 0) message("Force unloaded: ", paste(ul, collapse=', '))
     myRepository::buildAndCheck()
     
     ## If I don't do this, I get an inheritance-based hierarchy of
