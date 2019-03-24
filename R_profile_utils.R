@@ -31,9 +31,46 @@ bacAM <- function() {
     ## unload the inherited packages. So manually unload them before
     ## running buildAndCheck()
     ln <- loadedNamespaces()
-    for (ns in c("AnnotatedMatrix", "ParamSetI", "EventLogger")) {
-        if (is.element(ns, ln)) unloadNamespace(ns)
+    ul <- character()
+
+    nsList     <- c("SetFisherAnalysis", "SetFisher", "AnnotatedMatrix",
+                    "ParamSetI", "EventLogger")
+    lastTried  <- ""
+    iterations <- 0
+    maxIter    <- 2 + sum(seq_len(length(nsList)))
+    while (length(nsList) != 0) {
+        ns <- nsList[1]
+        if (lastTried == ns) {
+            ## Will catch a list of only one namespace that can't be
+            ## unloaded
+            warning("Failed to remove ",ns, " from environment")
+            break
+        }
+        iterations <- iterations + 1
+        if (iterations > maxIter) {
+            warning("Possible infinite recursion attempting to remove:\n",
+                    paste(nsList, collapse=', '))
+            break
+
+        }
+        lastTried <- ns
+        nsList    <- nsList[-1]
+        if (is.element(ns, ln)) {
+            tryCatch({
+                unloadNamespace(ns)
+            }, error = function(e) {
+                ## Try putting the namespace later in the
+                ## list. Perhaps there is a following namespace that
+                ## is depending on it? If so, attempting removal later
+                ## should work.
+                nsList <- c(nsList, ns)
+            }, finally = {
+                ## Note that we unloaded the namespace
+                ul <- c(ul, ns)
+            })
+        }
     }
+    if (length(ul) != 0) message("Force unloaded: ", paste(ul, collapse=', '))
     myRepository::buildAndCheck()
     
     ## If I don't do this, I get an inheritance-based hierarchy of
