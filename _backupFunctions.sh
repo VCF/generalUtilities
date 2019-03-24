@@ -104,9 +104,9 @@ function archiveFolder {
         ## backup to the proper location
         echo "#!/bin/bash
 ## Function to restore a tar.gz backup to the location it came from
-tgz=\"$1\"
+tgz=\"\$1\"
 dest=\"$sf\"
-par=$(dirname \"\$dest\")
+par=\$(dirname \"\$dest\")
 if [[ -z \"\$tgz\" ]]; then
     echo \"Please pass the path to the tar.gz file as the first argument\"
     exit
@@ -114,9 +114,9 @@ fi
 if [[ -d \"\$dest\" ]]; then
     ## If the target directory exists, move it to a renamed location (-BKUP)
     bkd=\"\$dest\"-BKUP
-    if [[ -d \"$bkd\" ]]; then
+    if [[ -d \"\$bkd\" ]]; then
         echo \"Backup directory exists - please remove or rename and try again\"
-        echo \"    $bkd\"
+        echo \"    \$bkd\"
         exit
     fi
     mv \"\$dest\" \"\$bkd\"
