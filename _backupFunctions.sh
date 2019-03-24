@@ -98,6 +98,39 @@ function archiveFolder {
     fi
     sf=$(backupSubfolder "$1" "$2")   # Backup folder (Target directory)
     mkdir -p -m 0777 "$sf"
+    resScript="$sf/restoreBackup.sh"
+    if [[ ! -s "$resScript" ]]; then
+        ## Put a little script in the folder that will restore a
+        ## backup to the proper location
+        echo "#!/bin/bash
+## Function to restore a tar.gz backup to the location it came from
+tgz=\"$1\"
+dest=\"$sf\"
+par=$(dirname \"\$dest\")
+if [[ -z \"\$tgz\" ]]; then
+    echo \"Please pass the path to the tar.gz file as the first argument\"
+    exit
+fi
+if [[ -d \"\$dest\" ]]; then
+    ## If the target directory exists, move it to a renamed location (-BKUP)
+    bkd=\"\$dest\"-BKUP
+    if [[ -d \"$bkd\" ]]; then
+        echo \"Backup directory exists - please remove or rename and try again\"
+        echo \"    $bkd\"
+        exit
+    fi
+    mv \"\$dest\" \"\$bkd\"
+fi
+## Create the partent directory if absent
+[[ ! -d \"\$par\" ]] && mkdir \"\$par\"
+
+gunzip -c \"\$tgz\" | tar -xvf -C \"\$par\" -
+
+echo \"Restored directory should be at: \$dest\"
+
+" > "$resScript"
+        chmod 0775 "$resScript"
+    fi
     mrb=$(mostRecentBackup "$1" "$2") # What is the most recent backup?
     if [[ ! -z "$mrb" ]]; then
         ## There is at least one backup. Is it more recent than the folder?
