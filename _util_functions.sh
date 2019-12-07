@@ -60,13 +60,20 @@ if [[ "$TERM" == "xterm" ]]; then
     BgYellow="103" # Fix ugly yellow background
 fi
 
+function ansiStart {
+    echo -e "\033[1;${1}m"
+}
+
+function ansiEnd {
+    echo -e "\033[0m"
+}
 
 function msg {
     ## Colorized terminal message.
     COL=$1 # The ANSI color code(s)
     MSG=$2 # The text to print
     [[ -z "$COL" ]] && col="32"
-    >&2 echo -e "\033[1;${COL}m${MSG}\033[0m";
+    >&2 echo -e "$(ansiStart "$COL")${MSG}$(ansiEnd)";
 }
 
 function err {
