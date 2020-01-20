@@ -104,7 +104,7 @@ function archiveFolder {
         echo "#!/bin/bash
 ## Function to restore a tar.gz backup to the location it came from
 tgz=\"\$1\"
-dest=\"$sf\"
+dest=\"$SRC\"
 par=\$(dirname \"\$dest\")
 if [[ -z \"\$tgz\" ]]; then
     echo \"Please pass the path to the tar.gz file as the first argument\"
@@ -123,9 +123,11 @@ fi
 ## Create the partent directory if absent
 [[ ! -d \"\$par\" ]] && mkdir \"\$par\"
 
-gunzip -c \"\$tgz\" | tar -xvf -C \"\$par\" -
+gunzip -c \"\$tgz\" | tar -C \"\$par\" -xvf -
 
-echo \"Restored directory should be at: \$dest\"
+echo \"Restored directory should be at: 
+  \$dest
+\"
 
 " > "$resScript"
         chmod 0775 "$resScript"
@@ -177,6 +179,12 @@ function rsyncFolder {
     sf=$(backupSubfolder "$1" "$2")   # Backup folder (Target directory)
     SrcName=`basename "$SRC"`
 
-    msg "$FgCyan" "Synchronizing $SrcName"
-    rsync -av "$SRC" "$sf"
+    ## Assure that target directory exists:
+    mkdir -p "$sf"
+    
+    msg "$FgCyan" "Synchronizing (rsync) $SrcName"
+    rsync -av "$SRC/" "$sf"
+    msg "$FgBlue" "  ... synchronization complete. Backup directory:
+  $sf
+"
 }
