@@ -35,8 +35,8 @@ LICENSE_GPL3="
 "
 
 ## Source in utility functions
-my_dir="$(dirname "$0")"
-. "$my_dir/_util_functions.sh"
+myGMBPdir="$(dirname "$0")"
+. "$myGMBPdir/_util_functions.sh"
 
 
 Folder="$1"

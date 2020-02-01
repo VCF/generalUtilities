@@ -24,8 +24,8 @@ LICENSE_GPL3="
 "
 
 ## script folder: https://stackoverflow.com/a/246128
-my_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-. "$my_dir/_util_functions.sh" # Source in utility functions
+myBFdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+. "$myBFdir/_util_functions.sh" # Source in utility functions
 
 if [[ -z "$BACKUPDIR" ]]; then
     BACKUPDIR="$HOME/FileBackups"
